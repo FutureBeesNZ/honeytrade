@@ -42,7 +42,7 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotlyOutput("summary_plot"),
+           plotlyOutput("summary_plot", height = '900'),
             
         )
     )
