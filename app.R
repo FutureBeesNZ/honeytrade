@@ -73,7 +73,7 @@ server <- function(input, output) {
     
     output$sankey_plot <- renderSankeyNetwork({
      
-      plot_sankey(trade_net(input$country, year=input$year, var=input$measure))
+      plot_sankey(trade_net(honey, input$country, year=input$year, var=input$measure))
      
     })
     

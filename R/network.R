@@ -2,7 +2,9 @@ library(networkD3)
 library(stringr)
 library(dplyr)
 
-trade_net <- function(country, year=2017, var="quantity") { 
+trade_net <- function(df, country, year=2017, var="quantity") { 
+  
+  honey <- df 
   
   country_ids_exp <- honey %>% filter(year== {{ year }}) %>%  filter(element == switch(var,Quantity="Export Quantity", Value="Export Value") ) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
