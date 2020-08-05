@@ -1,6 +1,12 @@
-trade_net <- function(country, year=2017) { 
+library(networkD3)
+library(stringr)
+
+trade_net <- function(country, year=2017, var="Quantity") { 
   
-  country_ids_exp <- honey %>% filter(year== {{ year }}) %>%  filter(element == "Export Quantity") %>% 
+  export_element <- str_interp("Export {{ var }}")
+  import_element <- str_intrep("Import {{ var }}") 
+  
+  country_ids_exp <- honey %>% filter(year== {{ year }}) %>%  filter(element == {{ export_element }} ) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(partner_countries) %>% 
     distinct() %>% 
@@ -10,7 +16,7 @@ trade_net <- function(country, year=2017) {
   
   exports <- honey %>% 
     filter(year == {{ year }}) %>% 
-    filter(element == "Export Quantity") %>% 
+    filter(element == {{ export_element }}) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(reporter_countries, partner_countries, value) %>% 
     left_join(country_ids_exp) %>% 
@@ -19,7 +25,7 @@ trade_net <- function(country, year=2017) {
     mutate(source = nrow(.))  %>% 
     select(source, target, value)
   
-  country_ids_imp <- honey %>% filter(year== {{ year }}) %>%  filter(element == "Import Quantity") %>% 
+  country_ids_imp <- honey %>% filter(year== {{ year }}) %>%  filter(element == {{ import_element }}) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(partner_countries) %>% 
     distinct() %>% 
@@ -28,7 +34,7 @@ trade_net <- function(country, year=2017) {
   
   imports <- honey %>% 
     filter(year ==  {{ year }}) %>% 
-    filter(element == "Import Quantity") %>% 
+    filter(element == {{ import_element }}) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(reporter_countries, partner_countries, value) %>% 
     left_join(country_ids_imp) %>% 
