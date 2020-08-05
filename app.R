@@ -13,15 +13,16 @@ library(ggplot2)
 library(plotly)
 library(dplyr)
 library(readr)
+library(janitor)
 
-honey <- read_csv('FAOSTAT_data_6-5-2020.csv') 
+honey <- janitor::clean_names(read_csv('FAOSTAT_data_6-5-2020.csv') )
 
-reporting_countries <- honey %>% distinct(`Reporter Countries`)
+reporting_countries <- honey %>% distinct(reporter_countries)
 
 variables <- c("Quantity", "Value") 
 
-min_year <- min(honey$Year)
-max_year <- max(honey$Year)
+min_year <- min(honey$year)
+max_year <- max(honey$year)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -73,7 +74,7 @@ server <- function(input, output) {
     
     output$sankey_plot <- renderSankeyNetwork({
      
-      plot_sankey(trade_net(honey, input$country, year=input$year, var=input$measure))
+      plot_sankey(trade_net(honey, country=input$country, year=input$year, var=input$measure))
      
     })
     

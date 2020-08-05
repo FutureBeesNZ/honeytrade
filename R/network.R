@@ -2,7 +2,7 @@ library(networkD3)
 library(stringr)
 library(dplyr)
 
-trade_net <- function(df, country, year=2017, var="quantity") { 
+trade_net <- function(df, country="New Zealand", year=2017, var="quantity") { 
   
   honey <- df 
   
