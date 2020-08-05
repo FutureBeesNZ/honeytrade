@@ -42,8 +42,7 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           plotlyOutput("summary_plot", height = '900'),
-            
+           sankeyNetworkOutput("sankey_plot", height = '900'),
         )
     )
     
@@ -55,11 +54,9 @@ ui <- fluidPage(
     )
 )
 
-# Define server logic required to draw a histogram
 server <- function(input, output) {
 
     subset_data <- reactive({
-        
         honey %>% 
             filter(`Reporter Countries` == input$country ) %>% 
             filter(`Element` == input$measure) %>% 
@@ -74,22 +71,12 @@ server <- function(input, output) {
       subset_data()   
     })
     
-    output$summary_plot <- renderPlotly({
-        plot_data <- subset_data() %>% select(Element, Year, `Partner Countries`, Value, Unit)
-     p <- ggplot(plot_data, aes(x=Year, y=Value, color=`Partner Countries`)) + geom_line() 
+    output$sankey_plot <- renderSankeyNetwork({
      
-     print(ggplotly(p))
-  
+      plot_sankey(trade_net(input$country))
+     
     })
     
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
 }
 
 # Run the application 
