@@ -2,12 +2,9 @@ library(networkD3)
 library(stringr)
 library(dplyr)
 
-trade_net <- function(country, year=2017, var="Quantity") { 
+trade_net <- function(country, year=2017, var="quantity") { 
   
-  export_element <- str_interp("Export {{ var }}")
-  import_element <- str_intrep("Import {{ var }}") 
-  
-  country_ids_exp <- honey %>% filter(year== {{ year }}) %>%  filter(element == {{ export_element }} ) %>% 
+  country_ids_exp <- honey %>% filter(year== {{ year }}) %>%  filter(element == switch(var,Quantity="Export Quantity", Value="Export Value") ) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(partner_countries) %>% 
     distinct() %>% 
@@ -17,7 +14,7 @@ trade_net <- function(country, year=2017, var="Quantity") {
   
   exports <- honey %>% 
     filter(year == {{ year }}) %>% 
-    filter(element == {{ export_element }}) %>% 
+    filter(element == switch(var,Quantity="Export Quantity", Value="Export Value") ) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(reporter_countries, partner_countries, value) %>% 
     left_join(country_ids_exp) %>% 
@@ -26,7 +23,7 @@ trade_net <- function(country, year=2017, var="Quantity") {
     mutate(source = nrow(.))  %>% 
     select(source, target, value)
   
-  country_ids_imp <- honey %>% filter(year== {{ year }}) %>%  filter(element == {{ import_element }}) %>% 
+  country_ids_imp <- honey %>% filter(year== {{ year }}) %>%  filter(element == switch(var,Quantity="Import Quantity", Value="Import Value")) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(partner_countries) %>% 
     distinct() %>% 
@@ -35,7 +32,7 @@ trade_net <- function(country, year=2017, var="Quantity") {
   
   imports <- honey %>% 
     filter(year ==  {{ year }}) %>% 
-    filter(element == {{ import_element }}) %>% 
+    filter(element == switch(var,Quantity="Import Quantity", Value="Import Value")) %>% 
     filter(reporter_countries == {{ country }}) %>% filter(value > 0) %>% 
     select(reporter_countries, partner_countries, value) %>% 
     left_join(country_ids_imp) %>% 

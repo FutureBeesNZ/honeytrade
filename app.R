@@ -18,7 +18,7 @@ honey <- read_csv('FAOSTAT_data_6-5-2020.csv')
 
 reporting_countries <- honey %>% distinct(`Reporter Countries`)
 
-variables <- honey %>% distinct(Element) 
+variables <- c("Quantity", "Value") 
 
 min_year <- min(honey$Year)
 max_year <- max(honey$Year)
@@ -37,7 +37,7 @@ ui <- fluidPage(
         sidebarPanel(
            selectInput("country", "Select Reporting Country", choices = reporting_countries),
            selectInput("measure", "Which measure?", choices = variables),
-           sliderInput("years", "Years", min=min_year, max=max_year, step=1, value=c(min_year, max_year), sep="" )
+           sliderInput("year", "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" )
         ),
 
         # Show a plot of the generated distribution
@@ -56,24 +56,24 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
-    subset_data <- reactive({
-        honey %>% 
-            filter(`Reporter Countries` == input$country ) %>% 
-            filter(`Element` == input$measure) %>% 
-            filter(`Year` > input$years[1] ) %>% 
-            filter(`Year` < input$years[2] ) %>% 
-            select(Element, Year, `Partner Countries`, Value, Unit)
-
-        
-        })
+    # subset_data <- reactive({
+    #     honey %>% 
+    #         filter(`Reporter Countries` == input$country ) %>% 
+    #         filter(`Element` == input$measure) %>% 
+    #         filter(`Year` > input$years[1] ) %>% 
+    #         filter(`Year` < input$years[2] ) %>% 
+    #         select(Element, Year, `Partner Countries`, Value, Unit)
+    # 
+    #     
+    #     })
     
-    output$tabledata <- renderDataTable({
-      subset_data()   
-    })
+    # output$tabledata <- renderDataTable({
+    #   subset_data()   
+    # })
     
     output$sankey_plot <- renderSankeyNetwork({
      
-      plot_sankey(trade_net(input$country))
+      plot_sankey(trade_net(input$country, year=input$year, var=input$measure))
      
     })
     
