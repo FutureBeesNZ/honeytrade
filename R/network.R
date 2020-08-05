@@ -1,5 +1,6 @@
 library(networkD3)
 library(stringr)
+library(dplyr)
 
 trade_net <- function(country, year=2017, var="Quantity") { 
   
