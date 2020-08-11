@@ -12,6 +12,11 @@ pool <- pool::dbPool(drv = RPostgres::Postgres(),
                dbname="geodata", 
                host="40.115.76.146") 
 
+onStop(function() {
+  poolClose(pool)
+})
+
+
 trade_matrix <- tbl(pool, "fao_trade_detailedtradematrix")
 
 reporting_countries <- tbl(pool, "fao_countries") %>% select(reporter_countries) %>%  collect() 
