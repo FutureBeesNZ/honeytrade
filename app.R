@@ -27,7 +27,7 @@ max_year <- max(years)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("FAO Honey Import/Export Data"),
+    titlePanel("FAO Agricultural Commodity Import/Export Data"),
 
     # Sidebar with a slider input for number of bins 
     tabsetPanel(
@@ -44,7 +44,8 @@ ui <- fluidPage(
 
         # Show a plot of the generated distribution
         mainPanel(
-           sankeyNetworkOutput("sankey_plot"),
+           htmlOutput("plot_title"),
+           sankeyNetworkOutput("sankey_plot")
         )
     )
     
@@ -63,9 +64,24 @@ server <- function(input, output) {
       ggplot2( honey, aes())
     })
       
-    output$sankey_plot <- renderSankeyNetwork({
+    df <- reactive({ 
       mydf <- subset_trade(trade_matrix, !!input$country, !!input$commodity, !!input$year, !!input$quantity_filter)
-      plot_sankey(trade_net(mydf, element=input$measure ))
+      validate(
+          need(mydf, "That query returned no data, please try another combination")
+      )
+      mydf
+    })
+    
+    output$plot_title <- renderText({
+      rv <- reactiveValuesToList(input)     
+      str_interp("<h2>Import/Export for ${rv$commodity} to/from ${rv$country} in ${rv$year}</h2>")
+    
+    })
+    
+    
+    output$sankey_plot <- renderSankeyNetwork({
+      
+      plot_sankey(trade_net(df(), element=input$measure ))
     })
     
 }
