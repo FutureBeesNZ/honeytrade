@@ -88,6 +88,7 @@ plot_sankey <- function(network) {
                 Value = 'value', 
                 NodeID = 'partner_countries',
                 fontSize=15, 
-                fontFamily="sans-serif")
+                fontFamily="sans-serif",height = 1000, width=1000
+                )
 }
 

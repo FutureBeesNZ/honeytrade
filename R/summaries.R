@@ -8,7 +8,6 @@ top_commodities <- function(country, element="expq", year=2017, n=20)  {
           impq="Import Quantity"
           )
           
-  
   trade_matrix %>% 
     filter(country == {{ country }}) %>% 
     filter(year == {{ year }}) %>% 
@@ -17,5 +16,5 @@ top_commodities <- function(country, element="expq", year=2017, n=20)  {
     summarise(total = sum(value)) %>% 
     arrange(desc(total)) %>% 
     head(n) 
-    
 }
+
