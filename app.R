@@ -35,16 +35,16 @@ ui <- fluidPage(
     tabPanel("Import/Export", {       
     sidebarLayout(
         sidebarPanel(
-           selectInput("country", "Select Reporting Country", choices = reporting_countries),
-           selectInput("commodity", "Which commodity?", choices= commodities), 
-           selectInput("measure", "Which measure?", choices = variables),
+           pickerInput("country", "Select Reporting Country", choices = reporting_countries, options=pickerOptions(liveSearch=TRUE)),
+           pickerInput("commodity", "Which commodity?", choices= commodities, options=pickerOptions(liveSearch=TRUE)), 
+           pickerInput("measure", "Which measure?", choices = variables),
            sliderInput("quantity_filter", "Filter minimum quantity", min=0, max=10000, step=1, value=0), 
            sliderInput("year", "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" )
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-           sankeyNetworkOutput("sankey_plot", height = '900'),
+           sankeyNetworkOutput("sankey_plot"),
         )
     )
     
@@ -62,7 +62,7 @@ server <- function(input, output) {
       
       ggplot2( honey, aes())
     })
-  
+      
     output$sankey_plot <- renderSankeyNetwork({
       mydf <- subset_trade(trade_matrix, !!input$country, !!input$commodity, !!input$year, !!input$quantity_filter)
       plot_sankey(trade_net(mydf, element=input$measure ))
