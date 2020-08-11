@@ -7,8 +7,10 @@ library(dplyr)
 library(readr)
 library(janitor)
 
+# Setup a .pgpass file in the home directory of the shiny server to save the password for the DB connection
 pool <- pool::dbPool(drv = RPostgres::Postgres(), 
-               dbname="geodata", host="40.115.76.146") 
+               dbname="geodata", 
+               host="40.115.76.146") 
 
 trade_matrix <- tbl(pool, "fao_trade_detailedtradematrix")
 
