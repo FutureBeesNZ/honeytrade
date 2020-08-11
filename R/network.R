@@ -11,13 +11,18 @@ library(dplyr)
 # Filter by values. 
 subset_trade <- function(df, country, item ="Honey, natural", year = 2017, value_filter = 0) {
 
-  df %>% 
+  out <- df %>% 
     filter(reporter_countries == {{ country }} ) %>% 
     filter(item == {{ item }}  ) %>% 
     filter(year ==  {{ year }} ) %>% 
     filter(value > {{ value_filter }} ) %>% 
     collect()
-    
+  if (nrow(out) > 0) { 
+  return(out) 
+  }
+  else{ 
+    return(FALSE) 
+  }
 }
 
 trade_net <- function(df, element="Quantity") { 
