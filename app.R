@@ -1,12 +1,4 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
+library(pool) 
 library(shiny)
 library(shinyWidgets)
 library(ggplot2) 
@@ -15,15 +7,20 @@ library(dplyr)
 library(readr)
 library(janitor)
 
-honey <- janitor::clean_names(read_csv('FAOSTAT_data_6-5-2020.csv') )
+#honey <- janitor::clean_names(read_csv('FAOSTAT_data_6-5-2020.csv') )
 
+pool <- pool::dbPool(drv = RPostgres::Postgres(), 
+               dbname="geodata", host="40.115.76.146") 
 
-reporting_countries <- honey %>% distinct(reporter_countries)
+trade_matrix <- tbl(pool, "fao_trade_detailedtradematrix")
+
+reporting_countries <- tbl(pool, "fao_countries") %>% select(reporter_countries) %>%  collect() 
 
 variables <- c("Quantity", "Value") 
 
-min_year <- min(honey$year)
-max_year <- max(honey$year)
+years <- tbl(pool, "fao_years") %>% collect() 
+min_year <- min(years)
+max_year <- max(years)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -60,20 +57,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
-    subset_data <- reactive({
       
-      subset_trade <- function(df, country, measure, year, value_filter) {
-         df %>% 
-             filter(reporter_countries == input$country ) %>% 
-             filter(element == input$measure) %>% 
-             filter(year == input$years) %>% 
-             filter(value > input$value_filter) %>% 
-             select(element, year, partner_countries, value, unit)
-      }
-      
-      subset_trade(honey, input$country, input$measure, input$years, input$value_filter)
-      
-    })
     
     output$world <- renderPlot({
       
@@ -82,12 +66,9 @@ server <- function(input, output) {
     })
   
     output$sankey_plot <- renderSankeyNetwork({
-     
-      plot_sankey(trade_net(honey, 
-                            country=input$country, 
-                            year=input$year, 
-                            var=input$measure, 
-                            min_val=input$quantity_filter))
+    
+      mydf <- subset_trade(trade_matrix, !!input$country, "Honey, natural", !!input$year, !!input$quantity_filter)
+      plot_sankey(trade_net(mydf, element=input$measure ))
      
     })
     

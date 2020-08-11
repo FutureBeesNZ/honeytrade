@@ -2,41 +2,54 @@ library(networkD3)
 library(stringr)
 library(dplyr)
 
-trade_net <- function(df, country="New Zealand", year=2017, var="Quantity", min_val=0) { 
+
+## Heper function to subset just the data we need for a particular:
+# Country
+# Commodity
+# Measure
+# Year and 
+# Filter by values. 
+subset_trade <- function(df, country, item ="Honey, natural", year = 2017, value_filter = 0) {
+
+  df %>% 
+    filter(reporter_countries == {{ country }} ) %>% 
+    filter(item == {{ item }}  ) %>% 
+    filter(year ==  {{ year }} ) %>% 
+    filter(value > {{ value_filter }} ) %>% 
+    collect()
+    
+}
+
+trade_net <- function(df, element="Quantity") { 
   
   # Prepare data for visualizing as a Sankey Diagram of import/export flow.
+  #element <- enquo(element)
+  #country <- enquo(country)
+  
+  el_import <- switch( element , Quantity="Import Quantity", Value="Import Value")
+  el_export <- switch( element , Quantity="Export Quantity", Value="Export Value")
+  
+  country <- df %>% select(reporter_countries) %>% distinct() %>% pull(reporter_countries)
   
   # Compute 0-based country ids for the Sankey Network Diagram
   country_ids_exp <- df %>% 
-    filter(year== {{ year }}) %>%  
-    filter(element == switch(var,Quantity="Export Quantity", Value="Export Value") ) %>% 
-    filter(reporter_countries == {{ country }}) %>% 
-    filter(value > 0) %>% 
-    filter(value > min_val) %>% 
+    filter(element == {{ el_export }}) %>% 
     select(partner_countries) %>% 
     distinct() %>% 
     mutate(country_id = group_indices(., partner_countries)) %>% 
     mutate(country_id = country_id - 1) %>% 
-    rbind(c({{ country }}, nrow(.))) 
+    rbind(c( country, nrow(.))) 
   
   # Start numbering export countries from last row of export countries 
   country_ids_imp <- df %>% 
-    filter(year == {{ year }}) %>%  
-    filter(element == switch(var,Quantity="Import Quantity", Value="Import Value")) %>% 
-    filter(reporter_countries == {{ country }}) %>% 
-    filter(value > 0) %>% 
-    filter(value > min_val) %>% 
+    filter(element == {{ el_import }}) %>% 
     select(partner_countries) %>% 
     distinct() %>% 
     mutate(country_id = group_indices(., partner_countries) + nrow(country_ids_exp) ) %>% 
     mutate(country_id = country_id - 1)
   
   exports <- df %>% 
-    filter(year == {{ year }}) %>% 
-    filter(element == switch(var,Quantity="Export Quantity", Value="Export Value") ) %>% 
-    filter(reporter_countries == {{ country }}) %>% 
-    filter(value > 0) %>% 
-    filter(value > min_val) %>% 
+    filter(element == {{ el_export }}) %>% 
     select(reporter_countries, partner_countries, value) %>% 
     left_join(country_ids_exp) %>% 
     mutate(country_id = as.numeric(country_id)) %>% 
@@ -46,11 +59,7 @@ trade_net <- function(df, country="New Zealand", year=2017, var="Quantity", min_
     arrange(value)
   
   imports <- df %>% 
-    filter(year ==  {{ year }}) %>% 
-    filter(element == switch(var,Quantity="Import Quantity", Value="Import Value")) %>% 
-    filter(reporter_countries == {{ country }}) %>% 
-    filter(value > 0) %>% 
-    filter(value > min_val) %>% 
+    filter(element == {{ el_import }}) %>% 
     select(reporter_countries, partner_countries, value) %>% 
     left_join(country_ids_imp) %>% 
     mutate(country_id = as.numeric(country_id) ) %>% 
@@ -73,7 +82,7 @@ plot_sankey <- function(network) {
                 Target = 'target', 
                 Value = 'value', 
                 NodeID = 'partner_countries',
-                fontSize=20, 
+                fontSize=15, 
                 fontFamily="sans-serif")
 }
 
