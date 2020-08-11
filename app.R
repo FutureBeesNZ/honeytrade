@@ -40,7 +40,6 @@ ui <- fluidPage(
            selectInput("measure", "Which measure?", choices = variables),
            sliderInput("quantity_filter", "Filter minimum quantity", min=0, max=10000, step=1, value=0), 
            sliderInput("year", "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" )
-          # plotlyOutput("world", "World Honey") 
         ),
 
         # Show a plot of the generated distribution
