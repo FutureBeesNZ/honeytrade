@@ -9,10 +9,13 @@ library(readr)
 library(janitor)
 
 # Setup a .pgpass file in the home directory of the shiny server to save the password for the DB connection
-pool <- pool::dbPool(drv = RPostgres::Postgres(), 
+pool <- pool::dbPool(drv = RPostgres::Postgres(),
                dbname="geodata", 
                host="40.115.76.146") 
 
+onStop(function() {
+  poolClose(pool)
+}) 
 
 
 
@@ -31,6 +34,7 @@ max_year <- max(years)
 ui <- fluidPage(
 
     # Application title
+
     titlePanel("FAO Agricultural Commodity Import/Export Data"),
 
     # Sidebar with a slider input for number of bins 
