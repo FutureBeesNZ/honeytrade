@@ -1,7 +1,7 @@
 library(pool) 
 library(shiny)
 library(shinyWidgets)
-#library(shinycssloaders)
+library(shinycssloaders)
 library(ggplot2) 
 library(plotly)
 library(dplyr)

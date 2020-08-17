@@ -14,7 +14,7 @@ countryPlotsUI <- function(id, panel_name="Top Commodities") {
          
       ),
       mainPanel(
-        plotOutput(ns("impexp"), height="900px") #%>% withSpinner() 
+        plotOutput(ns("impexp"), height="900px") %>% withSpinner() 
       )
     )
   })
