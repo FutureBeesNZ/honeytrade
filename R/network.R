@@ -26,11 +26,7 @@ subset_trade <- function(df, country, item ="Honey, natural", year = 2017, value
 }
 
 trade_net <- function(df, element="Quantity") { 
-  
-  # Prepare data for visualizing as a Sankey Diagram of import/export flow.
-  #element <- enquo(element)
-  #country <- enquo(country)
-  
+
   el_import <- switch( element , Quantity="Import Quantity", Value="Import Value")
   el_export <- switch( element , Quantity="Export Quantity", Value="Export Value")
   
