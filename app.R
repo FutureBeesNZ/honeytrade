@@ -17,12 +17,10 @@ onStop(function() {
   poolClose(pool)
 }) 
 
+trade_matrix <- pool %>% tbl("fao_trade_detailedtradematrix")
 
-
-trade_matrix <- tbl(pool, "fao_trade_detailedtradematrix")
-
-reporting_countries <- tbl(pool, "fao_countries") %>% select(reporter_countries) %>%  collect() 
-commodities <- tbl(pool, "fao_items") %>% collect() 
+reporting_countries <- pool %>% tbl("fao_countries") %>% select(reporter_countries) %>%  collect() 
+commodities <- pool %>% tbl("fao_items") %>% collect() 
 
 variables <- c("Quantity", "Value") 
 
@@ -52,6 +50,8 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
+ 
+  
   callModule(sankeyPanel, "sankey_panel")
   callModule(countryPlots, "country_plots")
     
