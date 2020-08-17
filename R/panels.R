@@ -7,7 +7,7 @@ countryPlotsUI <- function(id, panel_name="Top Commodities") {
       sidebarPanel(
      
         pickerInput(ns("country"), "Select Reporting Country", 
-                    choices = reporting_countries, 
+                    choices = reporting_countries, selected = "New Zealand",
                     options=pickerOptions(liveSearch=TRUE)),
         sliderInput(ns("n"), "Number of commodities", min=1, max=50, step=1, value=20),
         sliderInput(ns("year"), "Year", min=min_year, max=max_year, step=1, value=max_year, sep="" )
@@ -36,8 +36,8 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
     tabPanel(panel_name, {       
       sidebarLayout(
         sidebarPanel(
-          pickerInput(ns("commodity"), "Which commodity?", choices= commodities, options=pickerOptions(liveSearch=TRUE)), 
-          pickerInput(ns("country"), "Select Reporting Country", choices = reporting_countries, options=pickerOptions(liveSearch=TRUE)),
+          pickerInput(ns("commodity"), "Which commodity?", choices= commodities, selected="Honey, natural", options=pickerOptions(liveSearch=TRUE)), 
+          pickerInput(ns("country"), "Select Reporting Country", choices = reporting_countries, selected = "New Zealand", options=pickerOptions(liveSearch=TRUE)),
           pickerInput(ns("measure"), "Which measure?", choices = variables),
           sliderInput(ns("quantity_filter"), "Filter minimum quantity", min=0, max=10000, step=1, value=0), 
           sliderInput(ns("year"), "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" ),
