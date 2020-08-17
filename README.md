@@ -1,7 +1,7 @@
 # ~honey~world trade
 
-## Value Traded
-![](value.png)
+## Sankey Diagram
+![](img/sankey.png)
 
 ## Volume Traded
 ![](volume.png)
