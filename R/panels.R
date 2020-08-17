@@ -48,7 +48,7 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
         # Show a plot of the generated distribution
         mainPanel(
           htmlOutput(ns("plot_title")),
-          sankeyNetworkOutput(ns("sankey_plot"), height="1000px")
+          sankeyNetworkOutput(ns("sankey_plot"), width="100%", height="1000px")
         )
       )
       

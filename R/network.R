@@ -1,4 +1,5 @@
-library(networkD3)
+# library(networkD3)
+library(sankeyD3)
 library(stringr)
 library(dplyr)
 
@@ -83,8 +84,15 @@ plot_sankey <- function(network) {
                 Target = 'target', 
                 Value = 'value', 
                 NodeID = 'partner_countries',
-                fontSize=15, 
-                fontFamily="sans-serif",height = 1000, width=1000
+                fontSize=18, 
+                fontFamily="sans-serif", 
+                height = 1000, 
+                width=1000,
+                curvature=0.2,
+                zoom=TRUE,
+                nodeCornerRadius = 5,
+                numberFormat = ".2s",
+                nodeStrokeWidth = 2
                 )
 }
 
