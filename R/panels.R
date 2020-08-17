@@ -75,7 +75,7 @@ sankeyPanel <- function(input, output, session) {
     df() %>% select(partner_countries, element, value, item) %>% 
       group_by(partner_countries) %>% 
       collect() %>% 
-      pivot_wider(names_from = element, values_from=value) %>% 
+      tidyr::pivot_wider(names_from = element, values_from=value) %>% 
       arrange(desc(`Export Quantity`)) 
   }) 
     
