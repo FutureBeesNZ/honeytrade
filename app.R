@@ -1,6 +1,7 @@
 library(pool) 
 library(shiny)
 library(shinyWidgets)
+library(shinycssloaders)
 library(ggplot2) 
 library(plotly)
 library(dplyr)
@@ -12,9 +13,7 @@ pool <- pool::dbPool(drv = RPostgres::Postgres(),
                dbname="geodata", 
                host="40.115.76.146") 
 
-onStop(function() {
-  poolClose(pool)
-})
+
 
 
 trade_matrix <- tbl(pool, "fao_trade_detailedtradematrix")
@@ -38,6 +37,8 @@ ui <- fluidPage(
     tabsetPanel(
      
     sankeyPanelUI("sankey_panel"),
+    countryPlotsUI("country_plots"),
+    
     tabPanel("Table", {
         dataTableOutput("tabledata")
     })
@@ -47,7 +48,8 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
-   callModule(sankeyPanel, "sankey_panel")
+  callModule(sankeyPanel, "sankey_panel")
+  callModule(countryPlots, "country_plots")
     
 }
 
