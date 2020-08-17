@@ -14,7 +14,7 @@ fancy_scientific <- function(l) {
 }
 
 plot_theme <- function() { 
-  ggplot2::theme_set(ggplot2::theme_bw(base_size=16 )) #, base_family="Barlow")) 
+  ggplot2::theme_set(ggplot2::theme_bw(base_size=16))# , base_family="Barlow")) 
   ggplot2::theme_update(
     panel.background  = ggplot2::element_blank(),
     plot.background = ggplot2::element_rect(fill="gray96", colour=NA), 

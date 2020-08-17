@@ -40,13 +40,15 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
           pickerInput(ns("country"), "Select Reporting Country", choices = reporting_countries, options=pickerOptions(liveSearch=TRUE)),
           pickerInput(ns("measure"), "Which measure?", choices = variables),
           sliderInput(ns("quantity_filter"), "Filter minimum quantity", min=0, max=10000, step=1, value=0), 
-          sliderInput(ns("year"), "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" )
+          sliderInput(ns("year"), "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" ),
+          tableOutput(ns("exporters")),
+          tableOutput(ns("importers"))
         ),
         
         # Show a plot of the generated distribution
         mainPanel(
           htmlOutput(ns("plot_title")),
-          sankeyNetworkOutput(ns("sankey_plot"), height="900px")
+          sankeyNetworkOutput(ns("sankey_plot"), height="1000px")
         )
       )
       
@@ -69,6 +71,17 @@ sankeyPanel <- function(input, output, session) {
     str_interp("<h2>Import/Export for ${rv$commodity} to/from ${rv$country} in ${rv$year}</h2>")
   })
   
+  output$exporters <- renderTable({ 
+    df() %>% select(partner_countries, element, value, item) %>% 
+      group_by(partner_countries) %>% 
+      collect() %>% 
+      pivot_wider(names_from = element, values_from=value) %>% 
+      arrange(desc(`Export Quantity`)) 
+  }) 
+    
+    output$importers <- renderTable({ 
+      
+    })
   
   output$sankey_plot <- renderSankeyNetwork({
     plot_sankey(trade_net(df(), element=input$measure ))
