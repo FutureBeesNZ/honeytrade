@@ -14,7 +14,7 @@ fancy_scientific <- function(l) {
 }
 
 plot_theme <- function() { 
-  ggplot2::theme_set(ggplot2::theme_bw(base_size=12, base_family="Avenir")) 
+  ggplot2::theme_set(ggplot2::theme_bw(base_size=16 )) #, base_family="Barlow")) 
   ggplot2::theme_update(
     panel.background  = ggplot2::element_blank(),
     plot.background = ggplot2::element_rect(fill="gray96", colour=NA), 
@@ -52,7 +52,8 @@ plot_top_commodities <- function(country = "New Zealand", element = "impq", year
                        expq = "Export Quantities (tons)", 
                        expv =  "Export Values ($1000)")
   
-      title_text <- str_interp("${country} ${element_text} for top ${n} commodities in ${year}")           
+      title_text <- str_interp("${country} ${element_text}")
+      subtitle_text <- str_interp("for top ${n} commodities in ${year}")
 
                        
   ggplot(top_commodities(country, element, year, n), 
@@ -60,10 +61,17 @@ plot_top_commodities <- function(country = "New Zealand", element = "impq", year
     geom_col() + 
     coord_flip() + 
     xlab("Commodity") + 
-    ylab(element_text) + 
-    ggtitle(title_text) + 
+    ylab(element_text) +
+    labs(title=title_text, subtitle=subtitle_text) + 
     scale_y_continuous(labels=fancy_scientific) +
     plot_theme()
    
 
+}
+
+plot_all_elements <- function(country = "New Zealand", year=2017, n=10) { 
+  elements <- c('impq','impv','expq','expv')
+  plots <- furrr::future_map(elements, ~ plot_top_commodities(country, element =.x, n=n), .progress=TRUE )
+  ggpubr::ggarrange(plots[[1]],plots[[2]],plots[[3]],plots[[4]], ncol=2, nrow=2) 
+  
 }
