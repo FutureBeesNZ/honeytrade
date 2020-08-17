@@ -1,4 +1,4 @@
-countryplotsUI <- function(id, panel_name="Top Commodities") {
+countryPlotsUI <- function(id, panel_name="Top Commodities") {
 
   ns <- NS(id)
   
@@ -9,19 +9,26 @@ countryplotsUI <- function(id, panel_name="Top Commodities") {
         pickerInput(ns("country"), "Select Reporting Country", 
                     choices = reporting_countries, 
                     options=pickerOptions(liveSearch=TRUE)),
+        sliderInput(ns("n"), "Number of commodities", min=1, max=50, step=1, value=20),
         sliderInput(ns("year"), "Year", min=min_year, max=max_year, step=1, value=max_year, sep="" )
          
       ),
       mainPanel(
-        plotOutput(ns("expq")),
-        plotOutput(ns("expv")),
-        plotOutput(ns("impq")),
-        plotOutput(ns("impv"))
+        plotOutput(ns("impexp"), height="900px") %>% withSpinner() 
       )
     )
   })
     
 }
+
+countryPlots <- function(input, output, session) { 
+ 
+  output$impexp <- renderPlot({
+    plot_all_elements(input$country, input$year, input$n)
+  })
+   
+}
+
 
 sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
  ns <- NS(id)
@@ -29,8 +36,8 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
     tabPanel(panel_name, {       
       sidebarLayout(
         sidebarPanel(
-          pickerInput(ns("country"), "Select Reporting Country", choices = reporting_countries, options=pickerOptions(liveSearch=TRUE)),
           pickerInput(ns("commodity"), "Which commodity?", choices= commodities, options=pickerOptions(liveSearch=TRUE)), 
+          pickerInput(ns("country"), "Select Reporting Country", choices = reporting_countries, options=pickerOptions(liveSearch=TRUE)),
           pickerInput(ns("measure"), "Which measure?", choices = variables),
           sliderInput(ns("quantity_filter"), "Filter minimum quantity", min=0, max=10000, step=1, value=0), 
           sliderInput(ns("year"), "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" )
@@ -39,7 +46,7 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
         # Show a plot of the generated distribution
         mainPanel(
           htmlOutput(ns("plot_title")),
-          sankeyNetworkOutput(ns("sankey_plot"))
+          sankeyNetworkOutput(ns("sankey_plot"), height="900px")
         )
       )
       
