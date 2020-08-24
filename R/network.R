@@ -26,6 +26,9 @@ subset_trade <- function(df, country, item ="Honey, natural", year = 2017, value
   }
 }
 
+# Develop a trade network based on a subset of data for one country's import/exports 
+#  Currently only works with one country's imports/exports
+#  TODO: Make work with a selection of countries to show import/export flows of that set of countries.
 trade_net <- function(df, element="Quantity") { 
 
   el_import <- switch( element , Quantity="Import Quantity", Value="Import Value")
@@ -50,6 +53,7 @@ trade_net <- function(df, element="Quantity") {
     mutate(country_id = group_indices(., partner_countries) + nrow(country_ids_exp) ) %>% 
     mutate(country_id = country_id - 1)
   
+  # Build an exports network of nodes and flows
   exports <- df %>% 
     filter(element == {{ el_export }}) %>% 
     select(reporter_countries, partner_countries, value) %>% 
@@ -60,6 +64,7 @@ trade_net <- function(df, element="Quantity") {
     select(source, target, value) %>% 
     arrange(value)
   
+  # Build an imports netwok of nodes and flows
   imports <- df %>% 
     filter(element == {{ el_import }}) %>% 
     select(reporter_countries, partner_countries, value) %>% 
