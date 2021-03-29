@@ -1,3 +1,5 @@
+*.gz
+*.sqlite
 .Rproj.user
 .Rhistory
 .RData
