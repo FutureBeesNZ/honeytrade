@@ -43,6 +43,7 @@ dbExecute(con, "create table if not exists fao_items as select distinct item fro
 dbExecute(con, "create table if not exists fao_ctry_lookup as select distinct ctry, ctry_code from (select distinct reporter_countries as ctry, reporter_country_code as ctry_code, 'from' as type from fao_trade_detailedtradematrix union select distinct partner_countries as ctry, partner_country_code as ctry_code, 'to' as type from fao_trade_detailedtradematrix);")
 dbExecute(con, "create table if not exists fao_item_lookup as select distinct item, item_code from fao_trade_detailedtradematrix order by item;")
 dbExecute(con, "create table if not exists fao_element_lookup as select distinct element, element_code from fao_trade_detailedtradematrix order by element;")
+dbExecute(con, "create table if not exists fao_years as select distinct year from fao_trade_detailedtradematrix;")
 dbExecute(con, "VACUUM;") # make sure db uses disk efficiently
 
 

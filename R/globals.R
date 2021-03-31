@@ -8,6 +8,8 @@ library(dplyr)
 library(tidyr)
 library(readr)
 library(janitor)
+library(here)
+library(DBI)
 
 # File database using sqlite
 DB <- here("FAOTRADE.sqlite")
@@ -20,6 +22,6 @@ commodities <- con %>% tbl("fao_items") %>% collect()
 
 variables <- c("Quantity", "Value") 
 
-years <- tbl(pool, "fao_years") %>% collect() 
+years <- tbl(con, "fao_years") %>% collect() 
 min_year <- min(years)
 max_year <- max(years)
