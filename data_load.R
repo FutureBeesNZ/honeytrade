@@ -8,7 +8,7 @@ library(dplyr) # Pipes and data processing
 library(janitor) # Clean up/simplify column names
 
 # Create connection to file database "FAOTRADE.sqlite"
-con <- dbConnect(RSQLite::SQLite(), "FAOTADE.sqlite")
+con <- dbConnect(RSQLite::SQLite(), "FAOTRADE.sqlite")
 
 # Don't download again if clean.csv.gz already exists.
 if(!file.exists('clean.csv.gz')) { 
