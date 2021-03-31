@@ -7,7 +7,7 @@ Using FAO's trade matrix data to better understand the international trade in fo
 # Dependecies 
 
 * R dependecies handled by `renv`
-* `iconv` to convert to UTF-8 character set as data from FAO are not encoded as UTF-8
+* Running `data_load.R` depends on your system having a working copy of `iconv` to convert to UTF-8 character set as data from FAO are not encoded as UTF-8
   * Mac: `brew install libiconv`
   * Linux: `apt install libiconv`  
 
