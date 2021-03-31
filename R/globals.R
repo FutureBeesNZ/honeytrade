@@ -9,18 +9,14 @@ library(tidyr)
 library(readr)
 library(janitor)
 
-# Setup a .pgpass file in the home directory of the shiny server to save the password for the DB connection
-pool <- pool::dbPool(drv = RPostgres::Postgres(),
-                     dbname="geodata", 
-                     host="40.115.76.146") 
+# File database using sqlite
+DB <- here("FAOTRADE.sqlite")
+con <- dbConnect(RSQLite::SQLite(), DB)
 
-onStop(function() {
-  poolClose(pool)
-}) 
 
-trade_matrix <- pool %>% tbl("fao_trade_detailedtradematrix")
-reporting_countries <- pool %>% tbl("fao_countries") %>% select(reporter_countries) %>% collect() 
-commodities <- pool %>% tbl("fao_items") %>% collect() 
+trade_matrix <- con %>% tbl("fao_trade_detailedtradematrix")
+reporting_countries <- con %>% tbl("fao_countries") %>% select(reporter_countries) %>% collect() 
+commodities <- con %>% tbl("fao_items") %>% collect() 
 
 variables <- c("Quantity", "Value") 
 

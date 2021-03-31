@@ -4,7 +4,7 @@ library(stringr)
 library(dplyr)
 
 
-## Heper function to subset just the data we need for a particular:
+## Helper function to subset just the data we need for a particular:
 # Country
 # Commodity
 # Measure
