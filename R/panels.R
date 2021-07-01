@@ -21,12 +21,13 @@ countryPlotsUI <- function(id, panel_name="Top Commodities") {
     
 }
 
-countryPlots <- function(input, output, session) { 
- 
+countryPlots <- function(id) { 
+ moduleServer(id, function(input, output, session) {
   output$impexp <- renderPlot({
     plot_all_elements(input$country, input$year, input$n)
   })
-   
+ }
+ )
 }
 
 
@@ -39,10 +40,8 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
           pickerInput(ns("commodity"), "Which commodity?", choices= commodities, selected = "Honey, natural", options=pickerOptions(liveSearch=TRUE)), 
           pickerInput(ns("country"), "Select Reporting Country", choices = reporting_countries, selected = "New Zealand", options=pickerOptions(liveSearch=TRUE)),
           pickerInput(ns("measure"), "Which measure?", choices = variables),
-          sliderInput(ns("quantity_filter"), "Filter minimum quantity - IF THE PLOT LOOKS STRANGE, TRY FILTERING", min=0, max=10000, step=1, value=0), 
-          sliderInput(ns("year"), "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" ),
-          tableOutput(ns("exporters")),
-          tableOutput(ns("importers"))
+          sliderInput(ns("quantity_filter"), "Filter minimum quantity", min=0, max=10000, step=1, value=0), 
+          sliderInput(ns("year"), "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" )
         ),
         
         # Show a plot of the generated distribution
@@ -56,8 +55,9 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
    
 }
 
-sankeyPanel <- function(input, output, session) {
+sankeyPanel <- function(id) {
   
+  moduleServer(id, function(input, output, session) {
   df <- reactive({ 
     mydf <- subset_trade(trade_matrix, !!input$country, !!input$commodity, !!input$year, !!input$quantity_filter)
     validate(
@@ -86,7 +86,8 @@ sankeyPanel <- function(input, output, session) {
   output$sankey_plot <- renderSankeyNetwork({
     plot_sankey(trade_net(df(), element=input$measure ))
   })
-   
+  }
+  )
 }
 
 

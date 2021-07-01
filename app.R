@@ -8,14 +8,15 @@ ui <- fluidPage(
     countryPlotsUI("country_plots"),
     tabPanel("Table", {
         dataTableOutput("tabledata")
+      
     })
     
     )
 )
 
 server <- function(input, output) {
-  callModule(sankeyPanel, "sankey_panel")
-  callModule(countryPlots, "country_plots")
+  sankeyPanel("sankey_panel")
+  countryPlots("country_plots")
 }
 
 shinyApp(ui = ui, server = server)
