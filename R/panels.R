@@ -24,7 +24,7 @@ countryPlotsUI <- function(id, panel_name="Top Commodities") {
 countryPlots <- function(id) { 
  moduleServer(id, function(input, output, session) {
   output$impexp <- renderPlot({
-    plot_all_elements(input$country, input$year, input$n)
+    plot_all_elements(country = input$country, year= input$year, n = input$n)
   })
  }
  )

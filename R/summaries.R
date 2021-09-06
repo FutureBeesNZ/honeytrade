@@ -71,7 +71,7 @@ plot_top_commodities <- function(country = "New Zealand", element = "impq", year
 
 plot_all_elements <- function(country = "New Zealand", year=2017, n=10) { 
   elements <- c('impq','impv','expq','expv')
-  plots <- furrr::future_map(elements, ~ plot_top_commodities(country, element =.x, n=n), .progress=TRUE )
+  plots <- furrr::future_map(elements, ~ plot_top_commodities(country, element =.x, year = year, n=n), .progress=TRUE )
   ggpubr::ggarrange(plots[[1]],plots[[2]],plots[[3]],plots[[4]], ncol=2, nrow=2) 
   
 }
