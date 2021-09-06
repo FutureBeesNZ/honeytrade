@@ -1,3 +1,6 @@
+source('R/globals.R') 
+renv::restore(prompt=FALSE)
+
 ui <- fluidPage(
     # Application title
     titlePanel("FAO Agricultural Commodity Import/Export Data"),
@@ -8,15 +11,14 @@ ui <- fluidPage(
     countryPlotsUI("country_plots"),
     tabPanel("Table", {
         dataTableOutput("tabledata")
-      
     })
     
     )
 )
 
 server <- function(input, output) {
-  sankeyPanel("sankey_panel")
-  countryPlots("country_plots")
+  callModule(sankeyPanel, "sankey_panel")
+  callModule(countryPlots, "country_plots")
 }
 
 shinyApp(ui = ui, server = server)
