@@ -1,5 +1,5 @@
-# library(networkD3)
-library(sankeyD3)
+library(networkD3)
+#library(sankeyD3)
 library(stringr)
 library(dplyr)
 
@@ -93,11 +93,11 @@ plot_sankey <- function(network) {
                 fontFamily="sans-serif", 
                 height = 1000, 
                 width=1000,
-                curvature=0.2,
-                zoom=TRUE,
-                nodeCornerRadius = 5,
-                numberFormat = ".2s",
-                nodeStrokeWidth = 2
+                #curvature=0.2,
+                #zoom=TRUE,
+                #nodeCornerRadius = 5,
+                #numberFormat = ".2s",
+                #nodeStrokeWidth = 2
                 )
 }
 
