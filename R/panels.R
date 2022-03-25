@@ -40,7 +40,7 @@ sankeyPanelUI <- function(id, panel_name="Sankey Diagrams")  {
           pickerInput(ns("commodity"), "Which commodity?", choices= commodities, selected = "Honey, natural", options=pickerOptions(liveSearch=TRUE)), 
           pickerInput(ns("country"), "Select Reporting Country", choices = reporting_countries, selected = "New Zealand", options=pickerOptions(liveSearch=TRUE)),
           pickerInput(ns("measure"), "Which measure?", choices = variables),
-          sliderInput(ns("quantity_filter"), "Filter minimum quantity", min=0, max=10000, step=1, value=0), 
+          sliderInput(ns("quantity_filter"), "Filter minimum quantity", min=0, max=10000000, step=1000, value=0), 
           sliderInput(ns("year"), "Years", min=min_year, max=max_year, step=1, value=max_year, sep="" )
         ),
         
